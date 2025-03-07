@@ -9,21 +9,21 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const seedContacts = [
   {
-    _id: "67ca272d198e2c47c723a9d0",
+    _id: new ObjectId("67ca272d198e2c47c723a9d0"),
     email: "carlos.rojas@example.com",
     username: "carlos_rojas",
     name: "Carlos Rojas",
     ipAddress: "192.168.1.10",
   },
   {
-    _id: "67ca272d198e2c47c723a9d1",
+    _id: new ObjectId("67ca272d198e2c47c723a9d1"),
     email: "andrea.morales@example.com",
     username: "andrea_morales",
     name: "Andrea Morales",
     ipAddress: "192.168.1.11",
   },
   {
-    _id: "67ca272d198e2c47c723a9d2",
+    _id: new ObjectId("67ca272d198e2c47c723a9d2"),
     email: "juan.martinez@example.com",
     username: "juan_martinez",
     name: "Juan Martínez",
