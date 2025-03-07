@@ -9,21 +9,21 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const seedContacts = [
   {
-    _id: new ObjectId("67ca272d198e2c47c723a9d0"),
+    _id: "67ca272d198e2c47c723a9d0",
     email: "carlos.rojas@example.com",
     username: "carlos_rojas",
     name: "Carlos Rojas",
     ipAddress: "192.168.1.10",
   },
   {
-    _id: new ObjectId("67ca272d198e2c47c723a9d1"),
+    _id: "67ca272d198e2c47c723a9d1",
     email: "andrea.morales@example.com",
     username: "andrea_morales",
     name: "Andrea Morales",
     ipAddress: "192.168.1.11",
   },
   {
-    _id: new ObjectId("67ca272d198e2c47c723a9d2"),
+    _id: "67ca272d198e2c47c723a9d2",
     email: "juan.martinez@example.com",
     username: "juan_martinez",
     name: "Juan Martínez",
@@ -34,13 +34,17 @@ const seedContacts = [
 
 const seedDB = async () => {
   try {
-    await Contact.deleteMany();
+    await mongoose.connection.db.dropCollection("contacts").catch(err => console.log("Collection does not exist."));
     await Contact.insertMany(seedContacts);
     console.log("Database seeded successfully!");
-    mongoose.connection.close();
   } catch (error) {
     console.error("Error seeding database:", error);
+  } finally {
+    mongoose.connection.close();
+    console.log("Connection closed.");
   }
 };
+
+
 
 seedDB();
