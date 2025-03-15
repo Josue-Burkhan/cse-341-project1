@@ -14,11 +14,4 @@ const doc = {
 const outputFile = "./docs/swagger.json";
 const endpointsFiles = [require.resolve("./routes/contactRoutes.js")];
 
-(async () => {
-  try {
-    await swaggerAutogen(outputFile, endpointsFiles, doc);
-    console.log("Swagger documentation generated successfully.");
-  } catch (err) {
-    console.error("Error generating Swagger:", err);
-  }
-})();
+swaggerAutogen(outputFile, endpointsFiles, doc)
