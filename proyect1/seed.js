@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const Contact = require("./models/Contact"); 
+const Contact = require("./models/Contact");
 
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -9,32 +9,36 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const seedContacts = [
   {
-    _id: "67ca272d198e2c47c723a9d0",
+    firstName: "Carlos",
+    lastName: "Rojas",
     email: "carlos.rojas@example.com",
-    username: "carlos_rojas",
-    name: "Carlos Rojas",
-    ipAddress: "192.168.1.10",
+    favoriteColor: "Blue",
+    birthday: "1990-05-15",
   },
   {
-    _id: "67ca272d198e2c47c723a9d1",
+    firstName: "Andrea",
+    lastName: "Morales",
     email: "andrea.morales@example.com",
-    username: "andrea_morales",
-    name: "Andrea Morales",
-    ipAddress: "192.168.1.11",
+    favoriteColor: "Green",
+    birthday: "1988-09-21",
   },
   {
-    _id: "67ca272d198e2c47c723a9d2",
+    firstName: "Juan",
+    lastName: "Martínez",
     email: "juan.martinez@example.com",
-    username: "juan_martinez",
-    name: "Juan Martínez",
-    ipAddress: "192.168.1.12",
+    favoriteColor: "Red",
+    birthday: "2002-12-10",
   },
 ];
 
-
 const seedDB = async () => {
   try {
-    await mongoose.connection.db.dropCollection("contacts").catch(err => console.log("Collection does not exist."));
+    const collections = await mongoose.connection.db.listCollections().toArray();
+    if (collections.some(col => col.name === "contacts")) {
+      await mongoose.connection.db.dropCollection("contacts");
+      console.log("Collection dropped.");
+    }
+
     await Contact.insertMany(seedContacts);
     console.log("Database seeded successfully!");
   } catch (error) {
@@ -45,6 +49,7 @@ const seedDB = async () => {
   }
 };
 
-
-
-seedDB();
+mongoose.connection.once("open", () => {
+  console.log("Connected to MongoDB, seeding database...");
+  seedDB();
+});
