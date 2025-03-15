@@ -6,7 +6,7 @@ const doc = {
     description: "API documentation for managing contacts",
     version: "1.0.2",
   },
-  host: "localhost:3000",
+  host: "https://cse-341-project1-ffak.onrender.com/",
   basePath: "/",
   schemes: ["http"],
 };
