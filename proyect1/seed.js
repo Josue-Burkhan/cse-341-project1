@@ -9,17 +9,17 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const seedContacts = [
   {
-    firstName: "Carlos",
-    lastName: "Rojas",
-    email: "carlos.rojas@example.com",
-    favoriteColor: "Blue",
-    birthday: "1990-05-15",
+    firstName: "Victor Eduardo",
+    lastName: "Colque Pacompia",
+    email: "fluxpavilion73@gmail.com",
+    favoriteColor: "Green",
+    birthday: "2004-02-21",
   },
   {
     firstName: "Andrea",
     lastName: "Morales",
     email: "andrea.morales@example.com",
-    favoriteColor: "Green",
+    favoriteColor: "Skyblue",
     birthday: "1988-09-21",
   },
   {
