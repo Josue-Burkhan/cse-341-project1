@@ -8,7 +8,7 @@ const doc = {
   },
   host: "cse-341-project1-ffak.onrender.com",
   basePath: "/",
-  schemes: ["http"],
+  schemes: ["http, https"],
 };
 
 const outputFile = "./docs/swagger.json";
