@@ -5,6 +5,7 @@ const swaggerDocument = require('./docs/swagger.json');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
+
 const contactRoutes = require("./routes/contactRoutes.js");
 
 const app = express();
