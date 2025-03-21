@@ -10,7 +10,7 @@ const doc = {
     }
   },
   host: "localhost:3000",
-  servers: ["http://localhost:3000"],
+  servers: ["cse-341-project1-1-wxiy.onrender.com"],
   basePath: "/",
   schemes: ["http", "https"],
 };
