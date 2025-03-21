@@ -7,8 +7,8 @@ const characterSchema = new mongoose.Schema({
   race: { type: String, required: true },
   nickname: { type: String },
   appearance: {
-    height: { type: Number },
-    weight: { type: Number },
+    height: { type: Number, required: true },
+    weight: { type: Number, required: true },
     eyeColor: { type: String },
     hairColor: { type: String },
     clothingStyle: { type: String }
@@ -21,8 +21,13 @@ const characterSchema = new mongoose.Schema({
   },
   history: {
     birthplace: { type: String },
-    events: [{ year: Number, description: String }]
-  },  
+    events: [
+      {
+        year: Number,
+        description: String,
+        _id: false
+      }]
+  },
   relationships: {
     family: [String],
     friends: [String],
@@ -30,11 +35,10 @@ const characterSchema = new mongoose.Schema({
     allies: [String],
     romance: [String]
   },
-  abilities: [{
-    name: { type: String, required: true },
-    elements: [{ element: String, orbs: Number }]
-  }],
-  coreRank: { type: String, enum: ["Basic", "Beginner", "Intermediate", "Advanced", "Expert", "Legend", "Semi-God", "Divine", "God"], required: true }
-}, { collection: "newworld.character"});
+  abilities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ability" }],
+  coreRank: { type: String, enum: ["Basic", "Beginner", "Intermediate", "Advanced", "Expert", "Legend", "Semi-God", "God"], required: true }
+},
+
+  { collection: "newworld.character" });
 
 module.exports = mongoose.model("Character", characterSchema);

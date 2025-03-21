@@ -15,8 +15,8 @@ const seedCharacters = [
     race: "Dragontine",
     nickname: "Drake",
     appearance: {
-      height: 1.6, // En metros, sin "m"
-      weight: 60, // En kg, sin "kg"
+      height: 1.6,
+      weight: 60,
       eyeColor: "Gold",
       hairColor: "White",
       clothingStyle: "Warrior Style",
@@ -30,7 +30,7 @@ const seedCharacters = [
     history: {
       birthplace: "Alister Kingdom",
       events: [
-        { year: 215, description: "Born in the desert" }, // year como Number
+        { year: 215, description: "Born in the desert" },
       ],
     },
     relationships: {
@@ -40,19 +40,14 @@ const seedCharacters = [
       allies: [],
       romance: [],
     },
-    abilities: [
-      {
-        name: "Fire Breath",
-        elements: [{ element: "Fire", orbs: 3 }],
-      },
-    ],
+    abilities: [""],
     coreRank: "Expert",
   },
 ];
 
 const seedDB = async () => {
   try {
-    await Character.deleteMany({}); // Elimina todos los registros existentes
+    await Character.deleteMany({});
     await Character.insertMany(seedCharacters);
     console.log("Database seeded successfully!");
   } catch (error) {
