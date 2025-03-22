@@ -46,5 +46,5 @@ app.use("/api/newworld/characters", characterRoutes);
 
 //Star the server
 app.listen(PORT, () => {
-  console.log(`Your API is running on: http://${HOST}:${PORT}/api/contacts`);
+  console.log(`Your API is running on: http://${HOST}:${PORT}/api-newworld-docs`);
 });
