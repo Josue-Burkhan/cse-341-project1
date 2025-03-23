@@ -12,7 +12,7 @@ const doc = {
   host: "cse-341-project1-1-wxiy.onrender.com",
   servers: ["cse-341-project1-1-wxiy.onrender.com"],
   basePath: "/",
-  schemes: ["http", "https"],
+  schemes: ["https"]
 };
 
 const outputFile = "./docs/swagger.json";
