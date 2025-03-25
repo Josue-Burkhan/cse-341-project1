@@ -304,7 +304,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Ability not found" });
     }
 
-    if (!ability.owner.includes(req.user.userId)) {
+    if (ability.owner.toString() !== req.user.userId) {
       return res.status(403).json({ message: "Forbidden - You do not have permission to delete this ability" });
     }
 
