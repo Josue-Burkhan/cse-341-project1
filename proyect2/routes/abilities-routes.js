@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Ability = require("../models/Ability");
+const Character = require("../models/Character");
 const authMiddleware = require("../middleware/authMiddleware");
 
 // GET all abilities for the authenticated user
@@ -160,7 +161,9 @@ router.post("/", async (req, res) => {
       orbs: Number(el.orbs) || 0,
     }));
 
-    const characterIds = await Character.find({ _id: { $in: charactersWhoUse } }).distinct("_id");
+    const characterIds = await Character.find({
+      _id: { $in: req.body.charactersWhoUse }
+    }).distinct("_id");    
 
     const newAbility = new Ability({
       name,
