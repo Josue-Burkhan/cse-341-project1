@@ -63,7 +63,7 @@ router.get("/", authMiddleware, async (req, res) => {
     }
   */
   try {
-    const characters = await Character.find({ knownUsers: req.user.userId })
+    const characters = await Character.find({ owner: req.user.userId })
       .populate({
         path: "abilities",
         select: "name elements",
