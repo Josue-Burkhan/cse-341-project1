@@ -209,10 +209,7 @@ router.post("/", async (req, res) => {
           romance: ['string']  
         },  
         abilities: ['string'],  
-        coreRank: {  
-          type: 'string',  
-          enum: ["Basic", "Beginner", "Intermediate", "Advanced", "Expert", "Legend", "Semi-God", "God"]  
-        }  
+        coreRank: 'string' 
       }  
     }  
     #swagger.responses[201] = {  

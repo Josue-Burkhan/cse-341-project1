@@ -1256,29 +1256,8 @@
                   }
                 },
                 "coreRank": {
-                  "type": "object",
-                  "properties": {
-                    "type": {
-                      "type": "string",
-                      "example": "string"
-                    },
-                    "enum": {
-                      "type": "array",
-                      "example": [
-                        "Basic",
-                        "Beginner",
-                        "Intermediate",
-                        "Advanced",
-                        "Expert",
-                        "Legend",
-                        "Semi-God",
-                        "God"
-                      ],
-                      "items": {
-                        "type": "string"
-                      }
-                    }
-                  }
+                  "type": "string",
+                  "example": "string"
                 }
               }
             }

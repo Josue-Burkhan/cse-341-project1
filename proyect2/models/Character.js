@@ -36,7 +36,7 @@ const characterSchema = new mongoose.Schema({
     romance: [String]
   },
   abilities: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ability" }],
-  coreRank: { type: String, enum: ["Basic", "Beginner", "Intermediate", "Advanced", "Expert", "Legend", "Semi-God", "God"]},
+  coreRank: { type: String },
 
   owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 },
