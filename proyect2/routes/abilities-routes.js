@@ -150,19 +150,23 @@ router.post("/", async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const userId = decoded.userId;
 
-    if (req.body.elements && Array.isArray(req.body.elements)) {
-      req.body.elements = req.body.elements.map((el) => ({
-        element: el.element,
-        orbs: Number(el.orbs) || 0,
-      }));
+    const { name, type, description, elements, charactersWhoUse } = req.body;
+    if (!name || !type || !description || !Array.isArray(elements)) {
+      return res.status(400).json({ message: "Missing required fields" });
     }
 
-    const characterIds = await Character.find({
-      _id: { $in: req.body.charactersWhoUse }
-    }).distinct("_id");
+    const formattedElements = elements.map((el) => ({
+      element: el.element,
+      orbs: Number(el.orbs) || 0,
+    }));
+
+    const characterIds = await Character.find({ _id: { $in: charactersWhoUse } }).distinct("_id");
 
     const newAbility = new Ability({
-      ...req.body,
+      name,
+      type,
+      description,
+      elements: formattedElements,
       charactersWhoUse: characterIds,
       knownUsers: [userId],
     });
@@ -170,7 +174,11 @@ router.post("/", async (req, res) => {
     await newAbility.save();
     res.status(201).json(newAbility);
   } catch (error) {
-    res.status(400).json({ message: "Error creating ability", error });
+    if (error.name === "ValidationError") {
+      res.status(400).json({ message: "Validation error", error: error.message });
+    } else {
+      res.status(500).json({ message: "Internal Server Error", error: error.message });
+    }
   }
 });
 
