@@ -180,13 +180,13 @@ router.post("/", async (req, res) => {
       required: true,  
       schema: {  
         name: 'string',  
-        age: 'number',  
+        age: 0,  
         gender: 'string',  
         race: 'string',  
         nickname: 'string',  
         appearance: {  
-          height: 'number',  
-          weight: 'number',  
+          height: 0,  
+          weight: 0,  
           eyeColor: 'string',  
           hairColor: 'string',  
           clothingStyle: 'string'  
@@ -199,7 +199,7 @@ router.post("/", async (req, res) => {
         },  
         history: {  
           birthplace: 'string',  
-          events: [{ year: 'number', description: 'string' }]  
+          events: [{ year: 0, description: 'string' }]  
         },  
         relationships: {  
           family: ['string'],  
@@ -220,13 +220,13 @@ router.post("/", async (req, res) => {
       schema: {  
         _id: 'string',  
         name: 'string',  
-        age: 'number',  
+        age: 0,  
         gender: 'string',  
         race: 'string',  
         nickname: 'string',  
         appearance: {  
-          height: 'number',  
-          weight: 'number',  
+          height: 0,  
+          weight: 0,  
           eyeColor: 'string',  
           hairColor: 'string',  
           clothingStyle: 'string'  
@@ -239,7 +239,7 @@ router.post("/", async (req, res) => {
         },  
         history: {  
           birthplace: 'string',  
-          events: [{ year: 'number', description: 'string' }]  
+          events: [{ year: 0, description: 'string' }]  
         },  
         relationships: {  
           family: ['string'],  

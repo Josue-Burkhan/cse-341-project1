@@ -1090,8 +1090,8 @@
                   "example": "string"
                 },
                 "age": {
-                  "type": "string",
-                  "example": "number"
+                  "type": "number",
+                  "example": 0
                 },
                 "gender": {
                   "type": "string",
@@ -1109,12 +1109,12 @@
                   "type": "object",
                   "properties": {
                     "height": {
-                      "type": "string",
-                      "example": "number"
+                      "type": "number",
+                      "example": 0
                     },
                     "weight": {
-                      "type": "string",
-                      "example": "number"
+                      "type": "number",
+                      "example": 0
                     },
                     "eyeColor": {
                       "type": "string",
@@ -1184,8 +1184,8 @@
                         "type": "object",
                         "properties": {
                           "year": {
-                            "type": "string",
-                            "example": "number"
+                            "type": "number",
+                            "example": 0
                           },
                           "description": {
                             "type": "string",
@@ -1299,8 +1299,8 @@
                   "example": "string"
                 },
                 "age": {
-                  "type": "string",
-                  "example": "number"
+                  "type": "number",
+                  "example": 0
                 },
                 "gender": {
                   "type": "string",
@@ -1318,12 +1318,12 @@
                   "type": "object",
                   "properties": {
                     "height": {
-                      "type": "string",
-                      "example": "number"
+                      "type": "number",
+                      "example": 0
                     },
                     "weight": {
-                      "type": "string",
-                      "example": "number"
+                      "type": "number",
+                      "example": 0
                     },
                     "eyeColor": {
                       "type": "string",
@@ -1393,8 +1393,8 @@
                         "type": "object",
                         "properties": {
                           "year": {
-                            "type": "string",
-                            "example": "number"
+                            "type": "number",
+                            "example": 0
                           },
                           "description": {
                             "type": "string",

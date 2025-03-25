@@ -23,7 +23,7 @@ const characterSchema = new mongoose.Schema({
     birthplace: { type: String },
     events: [
       {
-        year: Number,
+        year: { type: Number, required: true },
         description: String,
         _id: false
       }]
