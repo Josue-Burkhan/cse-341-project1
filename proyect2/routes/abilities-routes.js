@@ -34,6 +34,7 @@ router.get("/", authMiddleware, async (req, res) => {
     }
   */
   try {
+    console.log("User ID:", req.user.userId);
     const abilities = await Ability.find({ owner: req.user.userId })
       .populate({
         path: "charactersWhoUse",
