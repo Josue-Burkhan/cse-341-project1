@@ -85,17 +85,28 @@ router.get("/:id", authMiddleware, async (req, res) => {
     }
   */
   try {
+    console.log("Requested ID:", req.params.id);
+
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(400).json({ message: "Invalid ability ID" });
     }
 
-    if (!ability || !ability.knownUsers.includes(req.user.userId)) {
-      return res.status(403).json({ message: "Forbidden - You don't have access to this ability" });
+    const ability = await Ability.findOne({ _id: req.params.id, knownUsers: req.user.userId })
+      .populate({
+        path: "charactersWhoUse",
+        select: "name",
+        options: { strictPopulate: false }
+      });
+
+    console.log("Retrieved ability:", ability);
+
+    if (!ability) {
+      return res.status(404).json({ message: "Ability not found or access denied" });
     }
 
     res.json(ability);
   } catch (error) {
-    console.error("Error retrieving ability:", error.message);
+    console.error("Error retrieving ability:", error);
     res.status(500).json({ message: "Error retrieving ability", error: error.message });
   }
 });
@@ -162,7 +173,7 @@ router.post("/", async (req, res) => {
 
     const characterIds = await Character.find({
       _id: { $in: req.body.charactersWhoUse }
-    }).distinct("_id");    
+    }).distinct("_id");
 
     const newAbility = new Ability({
       name,

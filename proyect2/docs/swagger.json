@@ -446,6 +446,9 @@
               }
             }
           },
+          "404": {
+            "description": "Not Found"
+          },
           "500": {
             "description": "Server error",
             "schema": {
