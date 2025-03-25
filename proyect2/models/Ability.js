@@ -12,6 +12,7 @@ const abilitySchema = new mongoose.Schema({
       _id: false
     }
   ],
+  charactersWhoUse: [{ type: mongoose.Schema.Types.ObjectId, ref: "Character" }],
   knownUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
 },
   { collection: "newworld.ability" }
