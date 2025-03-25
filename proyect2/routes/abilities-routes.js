@@ -88,16 +88,14 @@ router.get("/:id", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Invalid ability ID" });
     }
 
-    const ability = await Ability.findById(req.params.id)
-      .populate("charactersWhoUse", "name");
-
     if (!ability || !ability.knownUsers.includes(req.user.userId)) {
       return res.status(403).json({ message: "Forbidden - You don't have access to this ability" });
     }
 
     res.json(ability);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving ability", error });
+    console.error("Error retrieving ability:", error.message);
+    res.status(500).json({ message: "Error retrieving ability", error: error.message });
   }
 });
 
