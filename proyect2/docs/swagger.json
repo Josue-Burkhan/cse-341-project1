@@ -1802,17 +1802,14 @@
         "tags": [
           "Characters"
         ],
-        "description": "Update an existing character by ID.",
+        "description": "Updates a character\\'s details. Only the owner can update it.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
             "type": "string",
-            "description": "Character ID",
-            "schema": {
-              "type": "string"
-            }
+            "description": "Character ID"
           },
           {
             "name": "authorization",
@@ -1827,7 +1824,7 @@
           {
             "name": "body",
             "in": "body",
-            "description": "Updated character data",
+            "description": "Character details to update",
             "required": true,
             "schema": {
               "type": "object",
@@ -2013,64 +2010,34 @@
         "responses": {
           "200": {
             "description": "Character updated successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "_id": {
-                      "type": "string"
-                    },
-                    "name": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/Character"
             }
           },
           "400": {
-            "description": "Error updating character",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Error updating character"
-                    },
-                    "error": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Invalid character ID or bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission"
           },
           "404": {
-            "description": "Character not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string",
-                      "example": "Character not found"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Character not found"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Characters"
         ],
-        "description": "Delete a character by ID.",
+        "description": "Deletes a character by its ID. Only the owner of the character can delete it.",
         "parameters": [
           {
             "name": "id",
@@ -2106,41 +2073,27 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid character ID"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - User does not have permission"
+          },
           "404": {
-            "description": "Character not found",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "Character not found"
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "Character not found"
           },
           "500": {
-            "description": "Error deleting character",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "message": {
-                  "type": "string",
-                  "example": "Error deleting character"
-                },
-                "error": {
-                  "type": "object",
-                  "properties": {}
-                }
-              },
-              "xml": {
-                "name": "main"
-              }
-            }
+            "description": "Error deleting character"
           }
-        }
+        },
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ]
       }
     },
     "/auth/google": {

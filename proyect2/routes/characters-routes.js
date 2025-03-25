@@ -259,164 +259,142 @@ router.post("/", async (req, res) => {
       schema: { message: 'No token provided or invalid' }  
     }  
   */
-    try {
-      const token = req.headers.authorization?.split(" ")[1];
-      if (!token) {
-        return res.status(401).json({ message: "No token provided" });
-      }
-  
-      const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const userId = decoded.userId;
-  
-      if (req.body.abilities && !Array.isArray(req.body.abilities)) {
-        return res.status(400).json({ message: "Abilities must be an array of IDs" });
-      }
-  
-      const formattedCharacter = {
-        ...req.body,
-        age: Number(req.body.age) || 0,
-        appearance: {
-          ...req.body.appearance,
-          height: Number(req.body.appearance?.height) || 0,
-          weight: Number(req.body.appearance?.weight) || 0,
-          eyeColor: req.body.appearance?.eyeColor || "",
-          hairColor: req.body.appearance?.hairColor || "",
-          clothingStyle: req.body.appearance?.clothingStyle || "",
-        },
-        history: {
-          ...req.body.history,
-          birthplace: req.body.history?.birthplace || "",
-          events: (req.body.history?.events || []).map((event) => ({
-            ...event,
-            year: Number(event.year) || 0,
-            description: event.description || "",
-          })),
-        },
-        owner: userId,
-      };
-  
-      const newCharacter = new Character(formattedCharacter);
-      await newCharacter.save();
-      res.status(201).json(newCharacter);
-    } catch (error) {
-      if (error.name === "ValidationError") {
-        res.status(400).json({ message: "Validation error", error: error.message });
-      } else {
-        res.status(500).json({ message: "Error creating character", error: error.message });
-      }
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
     }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
+    if (req.body.abilities && !Array.isArray(req.body.abilities)) {
+      return res.status(400).json({ message: "Abilities must be an array of IDs" });
+    }
+
+    const formattedCharacter = {
+      ...req.body,
+      age: Number(req.body.age) || 0,
+      appearance: {
+        ...req.body.appearance,
+        height: Number(req.body.appearance?.height) || 0,
+        weight: Number(req.body.appearance?.weight) || 0,
+        eyeColor: req.body.appearance?.eyeColor || "",
+        hairColor: req.body.appearance?.hairColor || "",
+        clothingStyle: req.body.appearance?.clothingStyle || "",
+      },
+      history: {
+        ...req.body.history,
+        birthplace: req.body.history?.birthplace || "",
+        events: (req.body.history?.events || []).map((event) => ({
+          ...event,
+          year: Number(event.year) || 0,
+          description: event.description || "",
+        })),
+      },
+      owner: userId,
+    };
+
+    const newCharacter = new Character(formattedCharacter);
+    await newCharacter.save();
+    res.status(201).json(newCharacter);
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      res.status(400).json({ message: "Validation error", error: error.message });
+    } else {
+      res.status(500).json({ message: "Error creating character", error: error.message });
+    }
+  }
 });
 
 
 
 
 // PUT - Update a character by ID
-router.put("/:id", async (req, res) => {
-  /*  
-      #swagger.tags = ['Characters']  
-      #swagger.description = 'Update an existing character by ID.'  
-  
-      #swagger.parameters['id'] = { 
-        in: 'path', 
-        description: 'Character ID', 
-        required: true, 
-        schema: { type: 'string' }  
-      }  
-  
-      #swagger.parameters['body'] = { 
-  in: 'body', 
-  description: 'Updated character data', 
-  required: true, 
-  schema: { 
-    name: 'string', 
-    age: 0, 
-    gender: 'string', 
-    race: 'string', 
-    nickname: 'string', 
-    appearance: { 
-      height: 0, 
-      weight: 0, 
-      eyeColor: 'string', 
-      hairColor: 'string', 
-      clothingStyle: 'string' 
-    }, 
-    personality: { 
-      traits: ['string'], 
-      strengths: ['string'], 
-      weaknesses: ['string'], 
-      quirks: ['string'] 
-    }, 
-    history: { 
-      birthplace: 'string', 
-      events: [{ year: 0, description: 'string' }] 
-    }, 
-    relationships: { 
-      family: ['string'], 
-      friends: ['string'], 
-      enemies: ['string'], 
-      allies: ['string'], 
-      romance: ['string'] 
-    }, 
-    abilities: ['string'], 
-    coreRank: 'string'
-  } 
-}
- 
-  
-      #swagger.responses[200] = { 
-        description: 'Character updated successfully', 
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                _id: { type: "string" },
-                name: { type: "string" }
-              }
-            }
-          }
+router.put("/:id", authMiddleware, async (req, res) => {
+  /**
+    #swagger.tags = ['Characters']
+    #swagger.description = 'Updates a character\'s details. Only the owner can update it.'
+    #swagger.security = [{ "BearerAuth": [] }]
+    #swagger.parameters['id'] = {
+        in: 'path',
+        description: 'Character ID',
+        required: true,
+        type: 'string'
+    }
+    #swagger.parameters['body'] = {
+        in: 'body',
+        description: 'Character details to update',
+        required: true,
+        schema: {
+            name: 'string',
+            age: 0,
+            gender: 'string',
+            race: 'string',
+            nickname: 'string',
+            appearance: {
+                height: 0,
+                weight: 0,
+                eyeColor: 'string',
+                hairColor: 'string',
+                clothingStyle: 'string'
+            },
+            personality: {
+                traits: ['string'],
+                strengths: ['string'],
+                weaknesses: ['string'],
+                quirks: ['string']
+            },
+            history: {
+                birthplace: 'string',
+                events: [{ year: 0, description: 'string' }]
+            },
+            relationships: {
+                family: ['string'],
+                friends: ['string'],
+                enemies: ['string'],
+                allies: ['string'],
+                romance: ['string']
+            },
+            abilities: ['string'],
+            coreRank: 'string'
         }
-      }  
-  
-      #swagger.responses[404] = { 
-        description: 'Character not found', 
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Character not found" }
-              }
-            }
-          }
-        }
-      }  
-  
-      #swagger.responses[400] = { 
-        description: 'Error updating character', 
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                message: { type: "string", example: "Error updating character" },
-                error: { type: "object" }
-              }
-            }
-          }
-        }
-      }  
+    }
+    #swagger.responses[200] = {
+        description: 'Character updated successfully',
+        schema: { $ref: "#/definitions/Character" }
+    }
+    #swagger.responses[400] = {
+        description: 'Invalid character ID or bad request'
+    }
+    #swagger.responses[403] = {
+        description: 'Forbidden - User does not have permission'
+    }
+    #swagger.responses[404] = {
+        description: 'Character not found'
+    }
   */
   try {
-    const updatedCharacter = await Character.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const { id } = req.params;
 
-    if (!updatedCharacter) {
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid character ID" });
+    }
+
+    const character = await Character.findById(id);
+    if (!character) {
       return res.status(404).json({ message: "Character not found" });
     }
+
+    if (character.owner.toString() !== req.user.userId) {
+      return res.status(403).json({ message: "Forbidden - You do not have permission to update this character" });
+    }
+
+    const updatedCharacter = await Character.findByIdAndUpdate(
+      id,
+      req.body,
+      { new: true, runValidators: true }
+    );
 
     res.json(updatedCharacter);
   } catch (error) {
@@ -424,20 +402,56 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+module.exports = router;
+
+
 
 // DELETE 
-router.delete("/:id", async (req, res) => {
-  /*  
-  #swagger.tags = ['Characters']  
-  #swagger.description = 'Delete a character by ID.'  
-  #swagger.parameters['id'] = { in: 'path', description: 'Character ID', required: true, type: 'string' }  
-  #swagger.responses[200] = { description: 'Character deleted successfully', schema: { message: 'Character deleted successfully' } }  
-  #swagger.responses[404] = { description: 'Character not found', schema: { message: 'Character not found' } }  
-  #swagger.responses[500] = { description: 'Error deleting character', schema: { message: 'Error deleting character', error: {} } }  
+router.delete("/:id", authMiddleware, async (req, res) => {
+  /**  DELETE - Remove a character by ID
+   #swagger.tags = ['Characters']
+   #swagger.description = 'Deletes a character by its ID. Only the owner of the character can delete it.'
+   #swagger.security = [{ "BearerAuth": [] }]
+   #swagger.parameters['id'] = {
+       in: 'path',
+       description: 'Character ID',
+       required: true,
+       type: 'string'
+   }
+   #swagger.responses[200] = {
+       description: 'Character deleted successfully',
+       schema: { message: "Character deleted successfully" }
+   }
+   #swagger.responses[400] = {
+       description: 'Invalid character ID'
+   }
+   #swagger.responses[403] = {
+       description: 'Forbidden - User does not have permission'
+   }
+   #swagger.responses[404] = {
+       description: 'Character not found'
+   }
+   #swagger.responses[500] = {
+       description: 'Error deleting character'
+   }
   */
   try {
-    const deletedCharacter = await Character.findByIdAndDelete(req.params.id);
-    if (!deletedCharacter) return res.status(404).json({ message: "Character not found" });
+    const { id } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid character ID" });
+    }
+
+    const character = await Character.findById(id);
+    if (!character) {
+      return res.status(404).json({ message: "Character not found" });
+    }
+
+    if (character.owner.toString() !== req.user.userId) {
+      return res.status(403).json({ message: "Forbidden - You do not have permission to delete this character" });
+    }
+
+    await Character.findByIdAndDelete(id);
     res.json({ message: "Character deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Error deleting character", error });
