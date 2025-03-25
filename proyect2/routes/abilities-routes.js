@@ -21,7 +21,7 @@ router.get("/", authMiddleware, async (req, res) => {
         description: 'string', 
         elements: [{ element: 'string', orbs: 0 }], 
         charactersWhoUse: ['string'],
-        knownUsers: ['string'] 
+        owner: ['string'] 
       }] 
     }
     #swagger.responses[401] = { 
@@ -34,7 +34,7 @@ router.get("/", authMiddleware, async (req, res) => {
     }
   */
   try {
-    const abilities = await Ability.find({ knownUsers: req.user.userId })
+    const abilities = await Ability.find({ owner: req.user.userId })
       .populate({
         path: "charactersWhoUse",
         select: "name",
@@ -68,7 +68,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
         description: 'string', 
         elements: [{ element: 'string', orbs: 0 }], 
         charactersWhoUse: [{ _id: 'string', name: 'string' }],
-        knownUsers: ['string'] 
+        owner: ['string'] 
       } 
     }
     #swagger.responses[403] = { 
@@ -91,7 +91,7 @@ router.get("/:id", authMiddleware, async (req, res) => {
       return res.status(400).json({ message: "Invalid ability ID" });
     }
 
-    const ability = await Ability.findOne({ _id: req.params.id, knownUsers: req.user.userId })
+    const ability = await Ability.findOne({ _id: req.params.id, owner: req.user.userId })
       .populate({
         path: "charactersWhoUse",
         select: "name",
@@ -140,7 +140,7 @@ router.post("/", async (req, res) => {
           description: 'string', 
           elements: [{ element: 'string', orbs: 0 }], 
           charactersWhoUse: ['string'], 
-          knownUsers: ['string'] 
+          owner: ['string'] 
         } 
      }
      #swagger.responses[400] = { 
@@ -181,7 +181,7 @@ router.post("/", async (req, res) => {
       description,
       elements: formattedElements,
       charactersWhoUse: characterIds,
-      knownUsers: [userId],
+      owner: [userId],
     });
 
     await newAbility.save();
@@ -213,7 +213,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
       description: 'string', 
       elements: [{ element: 'string', orbs: 0 }], 
       charactersWhoUse: ['ObjectId'], 
-      knownUsers: ['ObjectId'] 
+      owner: ['ObjectId'] 
     } 
   }  
   #swagger.responses[200] = { 
@@ -225,7 +225,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
       description: 'string', 
       elements: [{ element: 'string', orbs: 0 }], 
       charactersWhoUse: ['string'], 
-      knownUsers: ['string'] 
+      owner: ['string'] 
     } 
   }  
   #swagger.responses[403] = { 
@@ -251,7 +251,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Ability not found" });
     }
 
-    if (!existingAbility.knownUsers.includes(req.user.userId)) {
+    if (!existingAbility.owner.includes(req.user.userId)) {
       return res.status(403).json({ message: "Forbidden - You do not have permission to update this ability" });
     }
 
@@ -305,7 +305,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
       return res.status(404).json({ message: "Ability not found" });
     }
 
-    if (!ability.knownUsers.includes(req.user.userId)) {
+    if (!ability.owner.includes(req.user.userId)) {
       return res.status(403).json({ message: "Forbidden - You do not have permission to delete this ability" });
     }
 
