@@ -279,6 +279,7 @@ router.post("/", async (req, res) => {
         ...req.body,
         age: Number(req.body.age) || 0,
         appearance: {
+          ...req.body.appearance,
           height: Number(req.body.appearance?.height) || 0,
           weight: Number(req.body.appearance?.weight) || 0,
           eyeColor: req.body.appearance?.eyeColor || "",
@@ -286,8 +287,10 @@ router.post("/", async (req, res) => {
           clothingStyle: req.body.appearance?.clothingStyle || "",
         },
         history: {
+          ...req.body.history,
           birthplace: req.body.history?.birthplace || "",
           events: (req.body.history?.events || []).map((event) => ({
+            ...event,
             year: Number(event.year) || 0,
             description: event.description || "",
           })),
@@ -305,7 +308,7 @@ router.post("/", async (req, res) => {
         res.status(500).json({ message: "Error creating character", error: error.message });
       }
     }
-  });
+});
 
 
 
