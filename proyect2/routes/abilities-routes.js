@@ -2,45 +2,129 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const Ability = require("../models/Ability");
+const authMiddleware = require("../middleware/authMiddleware");
 
-// GET all abilities
-router.get("/", async (req, res) => {
-  // #swagger.tags = ['Abilities']
-  // #swagger.description = 'Retrieve all abilities'
-  // #swagger.responses[200] = { description: 'Successfully retrieved abilities', schema: [{ "_id": "string", "name": "string", "description": "string", "element": "string" }] }
-  // #swagger.responses[500] = { description: 'Server error' }
+// GET all abilities for the authenticated user
+router.get("/", authMiddleware, async (req, res) => {
+  /*
+    #swagger.tags = ['Abilities']
+    #swagger.description = 'Retrieve all abilities associated with the authenticated user.'
+    #swagger.security = [{ "BearerAuth": [] }]
+    #swagger.responses[200] = { 
+      description: 'Successfully retrieved abilities', 
+      schema: [{ 
+        _id: 'string', 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }], 
+        knownUsers: ['ObjectId'] 
+      }] 
+    }
+    #swagger.responses[401] = { 
+      description: 'Unauthorized - No token provided or invalid', 
+      schema: { message: 'No token provided or invalid' } 
+    }
+    #swagger.responses[500] = { 
+      description: 'Server error', 
+      schema: { message: 'Error retrieving abilities', error: {} } 
+    }
+  */
   try {
-    const abilities = await Ability.find();
+    const abilities = await Ability.find({ knownUsers: req.user.userId });
     res.json(abilities);
   } catch (error) {
     res.status(500).json({ message: "Error retrieving abilities", error });
   }
 });
 
-// GET ability by ID
-router.get("/:id", async (req, res) => {
-  // #swagger.tags = ['Abilities']
-  // #swagger.description = 'Retrieve a specific ability by ID'
-  // #swagger.parameters['id'] = { description: 'Ability ID', required: true, type: 'string' }
-  // #swagger.responses[200] = { description: 'Successfully retrieved ability' }
-  // #swagger.responses[404] = { description: 'Ability not found' }
-  // #swagger.responses[500] = { description: 'Server error' }
+// GET ability by ID (only if user has access)
+router.get("/:id", authMiddleware, async (req, res) => {
+  /*
+    #swagger.tags = ['Abilities']
+    #swagger.description = 'Retrieve a specific ability by its ID, only if the authenticated user has access.'
+    #swagger.security = [{ "BearerAuth": [] }]
+    #swagger.parameters['id'] = { 
+      in: 'path', 
+      description: 'Ability ID', 
+      required: true, 
+      type: 'string' 
+    }
+    #swagger.responses[200] = { 
+      description: 'Successfully retrieved ability', 
+      schema: { 
+        _id: 'string', 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }], 
+        knownUsers: ['ObjectId'] 
+      } 
+    }
+    #swagger.responses[403] = { 
+      description: 'Forbidden - User does not have access to this ability', 
+      schema: { message: "Forbidden - You don't have access to this ability" } 
+    }
+    #swagger.responses[401] = { 
+      description: 'Unauthorized - No token provided or invalid', 
+      schema: { message: 'No token provided or invalid' } 
+    }
+    #swagger.responses[500] = { 
+      description: 'Server error', 
+      schema: { message: 'Error retrieving ability', error: {} } 
+    }
+  */
   try {
     const ability = await Ability.findById(req.params.id);
-    if (!ability) return res.status(404).json({ message: "Ability not found" });
+
+    if (!ability || !ability.knownUsers.includes(req.user.userId)) {
+      return res.status(403).json({ message: "Forbidden - You don't have access to this ability" });
+    }
+
     res.json(ability);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    res.status(500).json({ message: "Error retrieving ability", error });
   }
 });
 
-// POST 
+
+// POST
 router.post("/", async (req, res) => {
-  // #swagger.tags = ['Abilities']
-  // #swagger.description = 'Create a new ability.'
-  // #swagger.parameters['body'] = { in: 'body', description: 'Ability data', required: true, schema: { name: 'string', type: 'string', description: 'string', elements: [{ element: 'string', orbs: 0 }], knownUsers: ['string'] } }
-  // #swagger.responses[201] = { description: 'Ability created successfully', schema: { _id: 'string', name: 'string', type: 'string', description: 'string', elements: [{ element: 'string', orbs: 0 }], knownUsers: ['string'] } }
-  // #swagger.responses[400] = { description: 'Error creating ability', schema: { message: 'Error creating ability', error: {} } }
+  /*
+   #swagger.tags = ['Abilities']
+   #swagger.description = 'Create a new ability associated with the authenticated user.'
+   #swagger.security = [{ "BearerAuth": [] }]
+   #swagger.parameters['body'] = { 
+      in: 'body', 
+      description: 'Ability data', 
+      required: true, 
+      schema: { 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }] 
+      } 
+   }
+   #swagger.responses[201] = { 
+      description: 'Ability created successfully', 
+      schema: { 
+        _id: 'string', 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }], 
+        knownUsers: ['ObjectId'] 
+      } 
+   }
+   #swagger.responses[400] = { 
+      description: 'Error creating ability', 
+      schema: { message: 'Error creating ability', error: {} } 
+   }
+   #swagger.responses[401] = { 
+      description: 'Unauthorized - No token provided or invalid', 
+      schema: { message: 'No token provided or invalid' } 
+   }
+  */
   try {
     const token = req.headers.authorization?.split(" ")[1];
     if (!token) {
@@ -57,6 +141,7 @@ router.post("/", async (req, res) => {
       }));
     }
 
+
     const newAbility = new Ability({
       ...req.body,
       knownUsers: [userId],
@@ -68,6 +153,7 @@ router.post("/", async (req, res) => {
     res.status(400).json({ message: "Error creating ability", error });
   }
 });
+
 
 
 // PUT 
@@ -115,7 +201,7 @@ router.delete("/:id", async (req, res) => {
   #swagger.responses[200] = { description: 'Ability deleted successfully', schema: { message: 'Ability deleted successfully' } }  
   #swagger.responses[404] = { description: 'Ability not found', schema: { message: 'Ability not found' } }  
   #swagger.responses[500] = { description: 'Error deleting ability', schema: { message: 'Error deleting ability', error: {} } }  
-  */  
+  */
   try {
     const deletedAbility = await Ability.findByIdAndDelete(req.params.id);
     if (!deletedAbility) return res.status(404).json({ message: "Ability not found" });

@@ -6,6 +6,7 @@ const doc = {
     description: "API documentation for managing characters, factions, places, species, items, and more in the Wild Fantasy universe.",
     version: "1.0.1",
   },
+  //host: "127.0.0.1:3000",
   host: "cse-341-project1-1-wxiy.onrender.com",
   basePath: "/",
   schemes: ["https", "http"],

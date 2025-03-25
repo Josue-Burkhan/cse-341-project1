@@ -30,6 +30,13 @@ app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
 
+app.use((req, res, next) => {
+  if (req.query.token) {
+    req.headers.authorization = `Bearer ${req.query.token}`;
+  }
+  next();
+});
+
 
 app.use(session({
   secret: process.env.JWT_SECRET,
@@ -42,7 +49,34 @@ app.use(passport.session());
 
 
 //docs
-app.use('/api-newworld-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerOptions = {
+  swaggerOptions: {
+    authAction: {
+      BearerAuth: {
+        name: "Authorization",
+        schema: {
+          type: "apiKey",
+          in: "header",
+          name: "Authorization",
+          description: "Enter your token in the format: Bearer <token>",
+        },
+        value: "",
+      },
+    },
+  },
+};
+
+app.use(
+  "/api-newworld-docs",
+  swaggerUi.serve,
+  (req, res, next) => {
+    if (req.query.token) {
+      swaggerOptions.swaggerOptions.authAction.BearerAuth.value = `Bearer ${req.query.token}`;
+    }
+    swaggerUi.setup(swaggerDocument, swaggerOptions)(req, res, next);
+  }
+);
+
 
 // Connect to MongoDB
 mongoose
