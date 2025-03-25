@@ -3,10 +3,9 @@ const swaggerAutogen = require("swagger-autogen")();
 const doc = {
   info: {
     title: "Wild Fantasy API",
-    description: "API documentation for managing characters, factions, places, species, items, and more in the Wild Fantasy universe.",
+    description: "API documentation for managing characters, factions, places, species, items, and more in the Wild Fantasy universe. <a href='/auth/google'>Login</a>",
     version: "1.0.1",
   },
-  //host: "127.0.0.1:3000",
   host: "cse-341-project1-1-wxiy.onrender.com",
   basePath: "/",
   schemes: ["https", "http"],
@@ -18,11 +17,10 @@ const doc = {
       description: "Enter your token in the format: Bearer <token>",
     },
   },
-  security: [{ BearerAuth: [] }],
+  security: [{ BearerAuth: [] }] 
 };
 
 const outputFile = "./docs/swagger.json";
 const endpointsFiles = ["./server.js"];
 
 swaggerAutogen(outputFile, endpointsFiles, doc);
-
