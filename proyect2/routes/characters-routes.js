@@ -398,7 +398,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
 
     res.json(updatedCharacter);
   } catch (error) {
-    res.status(400).json({ message: "Error updating character", error });
+    res.status(400).json({ message: "Error updating character", error: error.message});
   }
 });
 
@@ -454,7 +454,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     await Character.findByIdAndDelete(id);
     res.json({ message: "Character deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting character", error });
+    res.status(500).json({ message: "Error deleting character", error: error.message });
   }
 });
 

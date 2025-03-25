@@ -277,7 +277,7 @@ router.put("/:id", authMiddleware, async (req, res) => {
 
     res.json(updatedAbility);
   } catch (error) {
-    res.status(400).json({ message: "Error updating ability", error });
+    res.status(400).json({ message: "Error updating ability", error: error.message });
   }
 });
 
@@ -312,7 +312,7 @@ router.delete("/:id", authMiddleware, async (req, res) => {
     await Ability.findByIdAndDelete(req.params.id);
     res.json({ message: "Ability deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: "Error deleting ability", error });
+    res.status(500).json({ message: "Error deleting ability", error: error.message });
   }
 });
 
