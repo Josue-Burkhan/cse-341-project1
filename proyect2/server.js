@@ -5,6 +5,9 @@ const swaggerDocument = require('./docs/swagger.json');
 const mongoose = require("mongoose");
 const cors = require("cors");
 const morgan = require("morgan");
+const session = require("express-session");
+const passport = require("passport");
+require("./auth/passport");
 
 const abilityRoutes = require("./routes/abilities-routes.js");
 const characterRoutes = require("./routes/characters-routes.js");
@@ -15,14 +18,28 @@ const characterRoutes = require("./routes/characters-routes.js");
 //const placeRoutes = require("./routes/places-routes.js");
 //const speciesRoutes = require("./routes/species-routes.js");
 
+const authRoutes = require("./routes/auth-routes");
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || "localhost";
+
 
 // Middleware
 app.use(express.json());
 app.use(cors());
 app.use(morgan("dev"));
+
+
+app.use(session({
+  secret: process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: true,
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 //docs
 app.use('/api-newworld-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
@@ -43,6 +60,8 @@ app.use("/api/newworld/characters", characterRoutes);
 //app.use("/api/newworld/magical-objects", magicalObjectRoutes);
 //app.use("/api/newworld/places", placeRoutes);
 //app.use("/api/newworld/species", speciesRoutes);
+
+app.use("/auth", authRoutes);
 
 //Star the server
 app.listen(PORT, () => {

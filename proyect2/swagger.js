@@ -9,6 +9,15 @@ const doc = {
   host: "cse-341-project1-1-wxiy.onrender.com",
   basePath: "/",
   schemes: ["https", "http"],
+  securityDefinitions: {
+    BearerAuth: {
+      type: "apiKey",
+      name: "Authorization",
+      in: "header",
+      description: "Enter your token in the format: Bearer <token>",
+    },
+  },
+  security: [{ BearerAuth: [] }],
 };
 
 const outputFile = "./docs/swagger.json";

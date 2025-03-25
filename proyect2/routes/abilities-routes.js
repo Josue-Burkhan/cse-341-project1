@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const jwt = require("jsonwebtoken");
 const Ability = require("../models/Ability");
 
 // GET all abilities
@@ -41,14 +42,26 @@ router.post("/", async (req, res) => {
   // #swagger.responses[201] = { description: 'Ability created successfully', schema: { _id: 'string', name: 'string', type: 'string', description: 'string', elements: [{ element: 'string', orbs: 0 }], knownUsers: ['string'] } }
   // #swagger.responses[400] = { description: 'Error creating ability', schema: { message: 'Error creating ability', error: {} } }
   try {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "No token provided" });
+    }
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const userId = decoded.userId;
+
     if (req.body.elements && Array.isArray(req.body.elements)) {
-      req.body.elements = req.body.elements.map(el => ({
+      req.body.elements = req.body.elements.map((el) => ({
         element: el.element,
-        orbs: Number(el.orbs) || 0
+        orbs: Number(el.orbs) || 0,
       }));
     }
 
-    const newAbility = new Ability(req.body);
+    const newAbility = new Ability({
+      ...req.body,
+      knownUsers: [userId],
+    });
+
     await newAbility.save();
     res.status(201).json(newAbility);
   } catch (error) {

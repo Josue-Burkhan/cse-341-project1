@@ -7,13 +7,15 @@ const abilitySchema = new mongoose.Schema({
   description: { type: String, required: true },
   elements: [
     {
-      element: { type: String, required: true},
-      orbs: { type: Number, required: true},
+      element: { type: String, required: true },
+      orbs: { type: Number, required: true },
       _id: false
     }
   ],
-  knownUsers: [String]
-}, { collection: "newworld.ability" });
+  knownUsers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+},
+  { collection: "newworld.ability" }
+);
 
 module.exports = mongoose.model("Ability", abilitySchema);
 
