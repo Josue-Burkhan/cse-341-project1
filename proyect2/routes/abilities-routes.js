@@ -199,47 +199,46 @@ router.post("/", async (req, res) => {
 // UPDATE ability by ID (only if user has access)
 router.put("/:id", authMiddleware, async (req, res) => {
   /*  
-  #swagger.tags = ['Abilities']  
-  #swagger.description = 'Update an existing ability by ID if the authenticated user has access.'  
-  #swagger.security = [{ "BearerAuth": [] }]  
-  #swagger.parameters['id'] = { in: 'path', description: 'Ability ID', required: true, type: 'string' }  
-  #swagger.parameters['body'] = { 
-    in: 'body', 
-    description: 'Updated ability data', 
-    required: true, 
-    schema: { 
-      name: 'string', 
-      type: 'string', 
-      description: 'string', 
-      elements: [{ element: 'string', orbs: 0 }], 
-      charactersWhoUse: ['ObjectId'], 
-      owner: ['ObjectId'] 
-    } 
-  }  
-  #swagger.responses[200] = { 
-    description: 'Ability updated successfully', 
-    schema: { 
-      _id: 'string', 
-      name: 'string', 
-      type: 'string', 
-      description: 'string', 
-      elements: [{ element: 'string', orbs: 0 }], 
-      charactersWhoUse: ['string'], 
-      owner: ['string'] 
-    } 
-  }  
-  #swagger.responses[403] = { 
-    description: 'Forbidden - User does not have access', 
-    schema: { message: 'Forbidden - You do not have permission to update this ability' } 
-  }  
-  #swagger.responses[404] = { 
-    description: 'Ability not found', 
-    schema: { message: 'Ability not found' } 
-  }  
-  #swagger.responses[400] = { 
-    description: 'Error updating ability', 
-    schema: { message: 'Error updating ability', error: {} } 
-  }  
+    #swagger.tags = ['Abilities']  
+    #swagger.description = 'Update an existing ability by ID if the authenticated user has access.'  
+    #swagger.security = [{ "BearerAuth": [] }]  
+    #swagger.parameters['id'] = { in: 'path', description: 'Ability ID', required: true, type: 'string' }  
+    #swagger.parameters['body'] = { 
+      in: 'body', 
+      description: 'Updated ability data', 
+      required: true, 
+      schema: { 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }], 
+        charactersWhoUse: ['ObjectId']
+      } 
+    }  
+    #swagger.responses[200] = { 
+      description: 'Ability updated successfully', 
+      schema: { 
+        _id: 'string', 
+        name: 'string', 
+        type: 'string', 
+        description: 'string', 
+        elements: [{ element: 'string', orbs: 0 }], 
+        charactersWhoUse: ['string'], 
+        owner: ['string']
+      } 
+    }  
+    #swagger.responses[403] = { 
+      description: 'Forbidden - User does not have access', 
+      schema: { message: 'Forbidden - You do not have permission to update this ability' } 
+    }  
+    #swagger.responses[404] = { 
+      description: 'Ability not found', 
+      schema: { message: 'Ability not found' } 
+    }  
+    #swagger.responses[400] = { 
+      description: 'Error updating ability', 
+      schema: { message: 'Error updating ability', error: {} } 
+    }  
   */
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {

@@ -542,15 +542,6 @@
                   "items": {
                     "type": "string"
                   }
-                },
-                "owner": {
-                  "type": "array",
-                  "example": [
-                    "ObjectId"
-                  ],
-                  "items": {
-                    "type": "string"
-                  }
                 }
               }
             }
