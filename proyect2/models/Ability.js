@@ -13,7 +13,7 @@ const abilitySchema = new mongoose.Schema({
     }
   ],
   charactersWhoUse: [{ type: mongoose.Schema.Types.ObjectId, ref: "Character" }],
-  owner: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+  owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
 },
   { collection: "newworld.ability" }
 );
